@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget CustomListTile(
+Widget customListTile(
     {required String title,
     required String singer,
     required String cover,
@@ -47,7 +47,7 @@ Widget CustomListTile(
           ),
           IconButton(
               onPressed: () {},
-              icon: Icon(
+              icon: const Icon(
                 Icons.file_download,
                 color: Colors.grey,
               ))

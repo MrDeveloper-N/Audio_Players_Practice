@@ -88,7 +88,7 @@ class _MusicAppState extends State<MusicApp> {
         children: [
           Expanded(
             child: ListView.builder(
-              itemBuilder: (context, index) => CustomListTile(
+              itemBuilder: (context, index) => customListTile(
                   title: musicList[index]['title'],
                   singer: musicList[index]['singer'],
                   cover: musicList[index]['coverUrl'],
