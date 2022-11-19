@@ -29,14 +29,16 @@ class MusicApp extends StatefulWidget {
 }
 
 class _MusicAppState extends State<MusicApp> {
+  double screenWeight = 0;
   String currentTitle = '';
   String currentSinger = '';
   String currentCover = '';
   IconData btnIcon = Icons.play_circle_fill_rounded;
 
+
   //Player
   AudioPlayer audioPlayer = AudioPlayer();
-  bool isPlaying = false;
+  bool isPlaying = true;
   String currentSong = '';
   Duration duration = const Duration();
   Duration position = const Duration();
@@ -117,7 +119,39 @@ class _MusicAppState extends State<MusicApp> {
                     value: position.inSeconds.toDouble(),
                     min: -3,
                     max: duration.inSeconds.toDouble() + 3,
-                    onChanged: (value) {}),
+                    onChanged: (value) {
+
+                      if (value <= 0) {
+                        audioPlayer.seek(const Duration(seconds: 0));
+                      } else if (value >= duration.inSeconds) {
+                        audioPlayer.seek(duration);
+                      } else {
+                        audioPlayer.seek(Duration(seconds: value.toInt()));
+                      }
+
+                    }),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        transformString(position.inSeconds),
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+
+                      Text(
+                        transformString(duration.inSeconds),
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+
                 Padding(
                   padding: const EdgeInsets.only(
                     left: 17.0,
@@ -161,7 +195,14 @@ class _MusicAppState extends State<MusicApp> {
                           )
                         ],
                       ),
+
                       IconButton(
+                        //The solution to the problem I encountered in this section:
+                        //Since the initial value of isPlaying was set to false on line 41,
+                        // when I wanted to stop the sound,
+                        // the sound did not stop and it started reading from the beginning and stopped in the second step,
+                        // And this was because the initial value of isPlaying which was false was changed to true and then it worked normally.
+                        // So, to solve the problem, I changed the initial value from false to true.
                         onPressed: () {
                           if (isPlaying) {
                             audioPlayer.pause();
@@ -192,5 +233,12 @@ class _MusicAppState extends State<MusicApp> {
         ],
       ),
     );
+  }
+
+  String transformString(int seconds) {
+    String minuteString =
+        '${(seconds / 60).floor() < 10 ? 0 : ''}${(seconds / 60).floor()}';
+    String secondString = '${(seconds % 60) < 10 ? 0 : ''}${(seconds % 60)}';
+    return '$minuteString:$secondString';
   }
 }
